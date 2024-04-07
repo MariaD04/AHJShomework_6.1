@@ -21,14 +21,8 @@ export default class DnD {
     let list;
     if (!card) {
       list = closest;
-      let upCard = document.elementFromPoint(
-        event.clientX,
-        event.clientY - this.cardsVerticalDistance
-      );
-      let downCard = document.elementFromPoint(
-        event.clientX,
-        event.clientY + this.cardsVerticalDistance
-      );
+      let upCard = document.elementFromPoint(event.clientX, event.clientY - this.cardsVerticalDistance);
+      let downCard = document.elementFromPoint(event.clientX, event.clientY + this.cardsVerticalDistance);
       if (upCard.className.startsWith("list-card")) {
         upCard = upCard.closest(".list-card");
         if (upCard) {
@@ -96,24 +90,14 @@ export default class DnD {
       event.preventDefault();
       const card = event.target.closest(".list-card");
       console.log(card);
-      if (
-        !card ||
-        event.target.classList.contains("list-card-remover") ||
-        event.target.className.startsWith("card")
-      ) {
+      if (!card || event.target.classList.contains("list-card-remover") || event.target.className.startsWith("card")) {
         return;
       }
 
-      if (
-        card.nextElementSibling &&
-        card.nextElementSibling.classList.contains("list-card")
-      ) {
+      if (card.nextElementSibling && card.nextElementSibling.classList.contains("list-card")) {
         this.origin.position = "beforebegin";
         this.origin.sibling = card.nextElementSibling;
-      } else if (
-        card.previousElementSibling &&
-        card.previousElementSibling.classList.contains("list-card")
-      ) {
+      } else if (card.previousElementSibling && card.previousElementSibling.classList.contains("list-card")) {
         this.origin.position = "afterend";
         this.origin.sibling = card.previousElementSibling;
       } else {
@@ -153,26 +137,16 @@ export default class DnD {
       this.template.remove();
 
       const closest = document.elementFromPoint(event.clientX, event.clientY);
-      if (
-        Math.trunc(this.origin.left) ===
-          parseInt(this.ghostEl.style.left, 10) &&
-        Math.trunc(this.origin.top) === parseInt(this.ghostEl.style.top, 10)
-      ) {
+      if (Math.trunc(this.origin.left) === parseInt(this.ghostEl.style.left, 10) && Math.trunc(this.origin.top) === parseInt(this.ghostEl.style.top, 10)) {
         const target = this.origin.sibling;
         target.insertAdjacentElement(this.origin.position, this.draggedEl);
       } else if (closest.className.startsWith("list-card")) {
         this.insertElement(event, closest, this.draggedEl);
         const originalCardsList = this.origin.sibling.closest(".list-cards");
-        localStorage.setItem(
-          originalCardsList.dataset.key,
-          originalCardsList.innerText
-        );
+        localStorage.setItem(originalCardsList.dataset.key, originalCardsList.innerText);
         const newCardsList = closest.closest(".list-cards");
         if (originalCardsList !== newCardsList) {
-          localStorage.setItem(
-            newCardsList.dataset.key,
-            newCardsList.innerText
-          );
+          localStorage.setItem(newCardsList.dataset.key, newCardsList.innerText);
         }
       } else {
         this.getCardBack();
